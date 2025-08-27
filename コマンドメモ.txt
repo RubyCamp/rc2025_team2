@@ -57,3 +57,14 @@ published
 
 
 onsens(id,name,geo_lat,geo_lng,description,tags,created_at,updated_at,open_hours,fee,)
+
+
+
+
+rails db:drop
+rails db:create
+rails db:migrate
+rails db:seed
+
+
+

@@ -6,6 +6,9 @@ class CreateOnsens < ActiveRecord::Migration[8.0]
       t.decimal :geo_lng
       t.text :description
       t.string :tags
+      t.integer :fee
+      t.time :open_hours
+      t.time :close_hours
 
       t.timestamps
     end
