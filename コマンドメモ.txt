@@ -1,0 +1,70 @@
+アプリ起動
+bin/dev
+
+コンソール起動 Rails コンソール
+rails console Rails
+
+DB 作成 初回のみ
+rails db:create
+
+DB マイグレーション DB 構造更新
+rails db:migrate
+
+シード投⼊ 初期データ登録
+rails db:seed
+
+ルーティング確認 URL ⼀覧
+rails routes
+
+アセット再構築 CSS/JS 反映
+rails assets:precompile
+
+gemini先生にご降臨いただく
+npx https://github.com/google-gemini/gemini-cli
+
+マイグレーション
+bin/rails g migration Addカラム名Toテーブル名 カラム名:型名
+db:migrate
+
+string
+text        長い
+integer
+float
+demical     正確
+date        
+time
+datetime
+boolian     真偽値
+binary      バイナリデータ(画像音声とか)
+primary_key 主キー
+references  外部キー
+
+マイグレーションの基本フローまとめ
+  bin/rails g migration AddFeeToOnsens fee:integer
+   - AddFeeToOnsens: マイグレーションの目的がわかる名前
+   - fee:integer: 追加したいカラム名とデータ型
+  生成されたdb/migrate/YYYYMMDDHHMMSS_add_fee_to_onsens.rbファイルを開き、必要に応じてデフォルト値などのオプションを追加します。
+bin/rails db:migrate
+ログに== AddFeeToOnsens: migrated (X.XXXXs) ==のように表示されれば成功
+
+  変更を取り消したい場合
+  bin/rails db:rollback
+
+open_hour
+
+bin/rails g migration Add[]ToOnsens []:boolian
+published
+
+
+onsens(id,name,geo_lat,geo_lng,description,tags,created_at,updated_at,open_hours,fee,)
+
+
+
+
+rails db:drop
+rails db:create
+rails db:migrate
+rails db:seed
+
+
+

@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< Updated upstream
 ActiveRecord::Schema[8.0].define(version: 2025_08_26_074859) do
+=======
+ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
+>>>>>>> Stashed changes
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,10 +52,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_074859) do
     t.decimal "geo_lng"
     t.text "description"
     t.string "tags"
+    t.integer "fee"
+    t.time "open_hours"
+    t.time "close_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< Updated upstream
     t.string "open_hours"
     t.integer "fee"
+=======
+>>>>>>> Stashed changes
   end
 
   create_table "reviews", force: :cascade do |t|
