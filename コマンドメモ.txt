@@ -56,3 +56,4 @@ bin/rails g migration Add[]ToOnsens []:boolian
 published
 
 
+onsens(id,name,geo_lat,geo_lng,description,tags,created_at,updated_at,open_hours,fee,)
