@@ -24,9 +24,32 @@ export default class extends Controller {
     });
 
     this.onsens.forEach(onsen => {
-      L.marker([onsen.geo_lat, onsen.geo_lng], { icon: onsenIcon })
+      // --- ここから追加 ---
+      // Tooltipに表示するHTMLを組み立てる
+      let tooltipContent = `<strong>${onsen.name}</strong>`;
+      // image_urlが存在すれば、imgタグを追加する
+      if (onsen.image_url) {
+        tooltipContent += `<br><img src="${onsen.image_url}" alt="${onsen.name}" width="100" style="display: block; margin-top: 5px;">`;
+      }
+      // --- ここまで追加 ---
+
+      // マーカーを作成し、定数 `marker` に格納
+      const marker = L.marker([onsen.geo_lat, onsen.geo_lng], { icon: onsenIcon })
         .addTo(this.map)
-        .bindPopup(onsen.name);
+        .bindTooltip(tooltipContent); // ★変更点: 組み立てたHTMLをTooltipに設定
+
+      // マーカーにクリックイベントを追加 (この部分はそのまま)
+      marker.on('click', () => {
+        // (中略) ... スクロールとハイライトの処理
+        const card = document.getElementById(`onsen-card-${onsen.id}`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('shadow-xl', 'ring-2', 'ring-blue-500', 'transition-all');
+          setTimeout(() => {
+            card.classList.remove('shadow-xl', 'ring-2', 'ring-blue-500');
+          }, 2000);
+        }
+      });
     });
   }
 
