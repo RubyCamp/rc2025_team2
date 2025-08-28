@@ -24,14 +24,15 @@
 <% end %>
       <div class="text-sm text-gray-700 mb-1">
   <strong>営業時間:</strong>
-  <%= onsen.open_hours.present? ? onsen.open_hours.strftime("%H:%M") : "未登録" %>
+  <%= onsen.respond_to?(:open_hours) && onsen.open_hours.present? ? onsen.open_hours.strftime("%H:%M") : "未登録" %>
 </div>
 <div class="text-sm text-gray-700 mb-1">
   <strong>終業時間:</strong>
-  <%= onsen.open_hours.present? ? onsen.close_hours.strftime("%H:%M") : "未登録" %>
+  <%= onsen.respond_to?(:close_hours) && onsen.close_hours.present? ? onsen.close_hours.strftime("%H:%M") : "未登録" %>
 </div>
-      <div class="text-sm text-gray-700 mb-2">
-  <strong>料金:</strong> <%= onsen.fee.present? ? number_to_currency(onsen.fee, unit: "¥", precision: 0) : "未登録" %>
+<div class="text-sm text-gray-700 mb-2">
+  <strong>料金:</strong>
+  <%= onsen.respond_to?(:fee) && onsen.fee.present? ? number_to_currency(onsen.fee, unit: "¥", precision: 0) : "未登録" %>
 </div>
       <div class="flex items-center">
         <% if onsen.reviews.any? %>
