@@ -43,7 +43,6 @@ export default class extends Controller {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap'
     }).addTo(this.map);
-
     L.marker(this.center).addTo(this.map)
       .bindPopup("現在地").openPopup();
   }
@@ -51,23 +50,29 @@ export default class extends Controller {
   // --- 温泉マーカー追加 ---
   _addOnsens() {
     this.onsens.forEach(onsen => {
+      console.log(typeof onsen.geo_lat);
+
       // lat/lngが正しいか確認
-      if (
-        typeof onsen.lat !== "number" ||
-        typeof onsen.lng !== "number" ||
-        isNaN(onsen.lat) ||
-        isNaN(onsen.lng)
-      ) {
-        console.warn("Invalid onsen data skipped:", onsen);
-        return;
-      }
+      // if (
+      //   typeof onsen.geo_lat !== "number" ||
+      //   typeof onsen.geo_lng !== "number" ||
+      //   isNaN(onsen.geo_lat) ||
+      //   isNaN(onsen.geo_lng)
+      // ) {
+      //   console.warn("Invalid onsen data skipped:", onsen);
+      //   return;
+      // }
 
       let tooltipContent = `<strong>${onsen.name || "名称不明"}</strong>`;
       if (onsen.image_url) {
         tooltipContent += `<br><img src="${onsen.image_url}" alt="${onsen.name}" width="300" style="display: block; margin-top: 5px;">`;
       }
-
-      L.marker([onsen.lat, onsen.lng]).addTo(this.map)
+      const onsenIcon = L.icon({
+        iconUrl: '/newonsen4.svg',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+      });
+      L.marker([Number(onsen.geo_lat), Number(onsen.geo_lng)], { icon: onsenIcon }).addTo(this.map)
         .bindTooltip(tooltipContent, { direction: 'top', offset: [0, -10] });
     });
   }
