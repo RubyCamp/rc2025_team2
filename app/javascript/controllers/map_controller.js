@@ -29,7 +29,7 @@ export default class extends Controller {
       let tooltipContent = `<strong>${onsen.name}</strong>`;
       // image_urlが存在すれば、imgタグを追加する
       if (onsen.image_url) {
-        tooltipContent += `<br><img src="${onsen.image_url}" alt="${onsen.name}" width="100" style="display: block; margin-top: 5px;">`;
+        tooltipContent += `<br><img src="${onsen.image_url}" alt="${onsen.name}" width="300" style="display: block; margin-top: 5px;">`;
       }
       // --- ここまで追加 ---
 
