@@ -45,24 +45,14 @@ export default class extends Controller {
     L.marker(this.center).addTo(this.map)
       .bindPopup("現在地").openPopup();
   }
+    this.onsens.forEach(onsen => {
+      // --- ここから追加 ---
+      // Tooltipに表示するHTMLを組み立てる
+      let tooltipContent = `<strong>${onsen.name}</strong>`;
+      // image_urlが存在すれば、imgタグを追加する
+      if (onsen.image_url) {
+        tooltipContent += `<br><img src="${onsen.image_url}" alt="${onsen.name}" width="300" style="display: block; margin-top: 5px;">`;
 
-  // --- 温泉マーカー ---
-  _addOnsens() {
-    const icon = L.icon({ iconUrl: '/onsen.svg', iconSize: [32,32], iconAnchor: [16,32] });
-    this.onsens.forEach(o => {
-      if (o.geo_lat != null && o.geo_lng != null) {
-        const tooltip = `<strong>${o.name}</strong>${o.image_url ? `<br><img src="${o.image_url}" width="100" style="display:block;margin-top:5px;">` : ''}`;
-        const marker = L.marker([o.geo_lat, o.geo_lng], { icon }).addTo(this.map).bindTooltip(tooltip);
-        marker.on('click', () => {
-          const card = document.getElementById(`onsen-card-${o.id}`);
-          if (card) {
-            card.scrollIntoView({ behavior:'smooth', block:'center' });
-            card.classList.add('shadow-xl','ring-2','ring-blue-500');
-            setTimeout(()=>{ card.classList.remove('shadow-xl','ring-2','ring-blue-500') }, 2000);
-          }
-        });
-      } else {
-        console.warn(`Missing coordinates for onsen: ${o.name}`);
       }
     });
   }

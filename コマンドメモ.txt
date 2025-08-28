@@ -68,3 +68,13 @@ rails db:seed
 
 
 
+DELETE FROM onsens WHERE id = 3;
+
+
+
+gitの操作メモ
+git status    ステージされてるかされてないかの確認
+git add .     全部ステージする
+git 
+
+ブランチ"管理画面のアプデ"の更新：onsens_controller.rbの67行目～と_form.html.erbの34行目～
