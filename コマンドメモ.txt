@@ -68,3 +68,4 @@ rails db:seed
 
 
 
+DELETE FROM onsens WHERE id = 3;
