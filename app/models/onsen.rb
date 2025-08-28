@@ -111,4 +111,11 @@ class Onsen < ApplicationRecord
       DistanceCalculatorService.calculate(lat, lng, onsen.geo_lat, onsen.geo_lng) <= radius
     end
   end
+  def open_hours
+    Time.parse("09:00") # 仮の固定値
+  end
+
+  def close_hours
+    Time.parse("18:00") # 仮の固定値
+  end
 end
