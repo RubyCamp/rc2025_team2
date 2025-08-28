@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "rainviewer/proxy", to: "rainviewer#proxy", defaults: { format: :json }
   resources :onsens, only: %i[ index show ] do
     resources :reviews, only: %i[ create new ]
   end

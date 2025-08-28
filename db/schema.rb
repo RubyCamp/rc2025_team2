@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_28_013200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,17 +42,50 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "inn_details", force: :cascade do |t|
+    t.string "hours"
+    t.string "phone_number"
+    t.string "quality"
+    t.integer "price"
+    t.bigint "inn_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "address"
+    t.bigint "onsen_id", null: false
+    t.index ["inn_id"], name: "index_inn_details_on_inn_id"
+    t.index ["onsen_id"], name: "index_inn_details_on_onsen_id"
+  end
+
+  create_table "inns", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.string "phone_number"
+    t.string "quality"
+    t.integer "price"
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "business_hours"
+    t.string "url"
+    t.float "latitude"
+    t.float "longitude"
+    t.integer "x_coord"
+    t.integer "y_coord"
+    t.string "hours"
+  end
+
   create_table "onsens", force: :cascade do |t|
     t.string "name"
     t.decimal "geo_lat"
     t.decimal "geo_lng"
     t.text "description"
     t.string "tags"
-    t.integer "fee"
-    t.time "open_hours"
-    t.time "close_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "latitude"
+    t.float "longitude"
+    t.string "open_hours"
+    t.time "close_hours"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -66,5 +99,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "inn_details", "inns"
+  add_foreign_key "inn_details", "onsens"
   add_foreign_key "reviews", "onsens"
 end
