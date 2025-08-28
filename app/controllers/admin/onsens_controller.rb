@@ -64,7 +64,7 @@ class Admin::OnsensController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    #
+    #   変更点　:open_hours, :close_hours, :feeを追加
     def onsen_params
       params.expect(onsen: [ :name, :geo_lat, :geo_lng, :description, :tags, :open_hours, :close_hours, :fee, images: [] ])
     end
