@@ -9,6 +9,8 @@ export default class extends Controller {
 
   async connect() {
     this.onsens = this._parseOnsensData();
+    console.log("Loaded onsens:", this.onsens); // デバッグ用
+
     this.defaultCoords = [35.468, 133.0483];
     this.center = await this._getCurrentLocation();
 
@@ -45,15 +47,28 @@ export default class extends Controller {
     L.marker(this.center).addTo(this.map)
       .bindPopup("現在地").openPopup();
   }
+
+  // --- 温泉マーカー追加 ---
+  _addOnsens() {
     this.onsens.forEach(onsen => {
-      // --- ここから追加 ---
-      // Tooltipに表示するHTMLを組み立てる
-      let tooltipContent = `<strong>${onsen.name}</strong>`;
-      // image_urlが存在すれば、imgタグを追加する
+      // lat/lngが正しいか確認
+      if (
+        typeof onsen.lat !== "number" ||
+        typeof onsen.lng !== "number" ||
+        isNaN(onsen.lat) ||
+        isNaN(onsen.lng)
+      ) {
+        console.warn("Invalid onsen data skipped:", onsen);
+        return;
+      }
+
+      let tooltipContent = `<strong>${onsen.name || "名称不明"}</strong>`;
       if (onsen.image_url) {
         tooltipContent += `<br><img src="${onsen.image_url}" alt="${onsen.name}" width="300" style="display: block; margin-top: 5px;">`;
-
       }
+
+      L.marker([onsen.lat, onsen.lng]).addTo(this.map)
+        .bindTooltip(tooltipContent, { direction: 'top', offset: [0, -10] });
     });
   }
 
@@ -62,18 +77,20 @@ export default class extends Controller {
     try {
       const data = await fetch("/rainviewer/proxy.json").then(res => res.json());
 
-      // ← 修正ポイント: radar.past / radar.nowcast を使用
-      const pastFrames = Array.isArray(data.radar?.past) ? data.radar.past : [];
-      const forecastFrames = Array.isArray(data.radar?.nowcast) ? data.radar.nowcast : [];
+      const pastFrames = Array.isArray(data.radar && data.radar.past) ? data.radar.past : [];
+      const forecastFrames = Array.isArray(data.radar && data.radar.nowcast) ? data.radar.nowcast : [];
       this.frames = [...pastFrames, ...forecastFrames];
 
       if (!this.frames.length) return console.warn("RainViewer: no frames available");
 
-      // TileLayer を作成（URL が // なら https を補完）
       this.radarLayers = this.frames.map(f => {
         if (!f.path) return null;
         const url = f.path.startsWith('//') ? 'https:' + f.path : data.host + f.path;
-        return L.tileLayer(url + '/256/{z}/{x}/{y}/2/1_1.png', { tileSize:256, opacity:0.5, attribution:'&copy; RainViewer' });
+        return L.tileLayer(url + '/256/{z}/{x}/{y}/2/1_1.png', {
+          tileSize: 256,
+          opacity: 0.5,
+          attribution: '&copy; RainViewer'
+        });
       }).filter(layer => layer != null);
 
       if (!this.radarLayers.length) return console.warn("RainViewer: no valid tile layers");
@@ -81,7 +98,6 @@ export default class extends Controller {
       this.currentFrame = 0;
       this.radarLayers[this.currentFrame].addTo(this.map);
 
-      // --- スライダー初期化 ---
       if (this.hasSliderTarget) {
         this.sliderTarget.max = this.radarLayers.length - 1;
         this.sliderTarget.value = this.currentFrame;
@@ -89,10 +105,9 @@ export default class extends Controller {
         this.sliderTarget.addEventListener("change", e => this._onSliderChange(e));
       }
 
-      // --- 自動アニメーション ---
       this._startAnimation();
 
-    } catch(e) {
+    } catch (e) {
       console.error("RainViewer load failed:", e);
     }
   }
@@ -117,12 +132,18 @@ export default class extends Controller {
     this.map.removeLayer(this.radarLayers[this.currentFrame]);
     this.currentFrame = parseInt(event.target.value);
     this.radarLayers[this.currentFrame].addTo(this.map);
-    setTimeout(()=>{ this.sliderActive = false; }, 1000);
+    setTimeout(() => { this.sliderActive = false; }, 1000);
   }
 
   _parseOnsensData() {
-    try { return JSON.parse(this.element.dataset.mapOnsens || "[]"); } 
-    catch(e){ console.warn(e); return []; }
+    try {
+      return JSON.parse(this.element.dataset.mapOnsens || "[]");
+    } catch (e) {
+      console.warn("Invalid JSON in data-map-onsens:", e);
+      return [];
+    }
   }
 }
+
+
 
