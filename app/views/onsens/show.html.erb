@@ -16,7 +16,15 @@
             （<%= @onsen.reviews.count %>件のレビュー）
           </span>
         </h1>
-
+<% if user_signed_in? %>
+  <% if current_user.favorites.exists?(onsen_id: @onsen.id) %>
+    <%= button_to " ★お気に入り解除", onsen_favorite_path(@onsen), method: :delete,
+                  class: "text-yellow-500 hover:underline text-sm ml-1" %>
+  <% else %>
+    <%= button_to " ☆お気に入り追加", onsen_favorite_path(@onsen), method: :post,
+                  class: "text-gray-500 hover:underline text-sm ml-1" %>
+  <% end %>
+<% end %>
         <% if @onsen.tags.present? %>
           <div class="flex flex-wrap gap-2 mb-4">
             <% @onsen.tags.split(',').each do |tag| %>

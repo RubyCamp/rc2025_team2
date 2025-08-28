@@ -3,6 +3,11 @@
   <div class="flex items-start gap-4">
     <% if onsen.images.attached? %>
       <%= image_tag onsen.images.first, class: "w-20 h-20 object-cover rounded-lg flex-shrink-0", alt: onsen.name %>
+      <h2 class="text-lg font-semibold mb-2 truncate <%= 'text-yellow-600 font-bold' if user_signed_in? && current_user.favorites.exists?(onsen_id: onsen.id) %>">
+  <%= onsen.name %>
+</h2>
+
+
     <% else %>
       <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 flex-shrink-0 text-xs">No Image</div>
     <% end %>
@@ -14,6 +19,9 @@
           <span class="font-medium">タグ:</span> <%= onsen.tags %>
         </div>
       <% end %>
+      <% if user_signed_in? && current_user.favorites.exists?(onsen_id: onsen.id) %>
+  <div class="text-yellow-500 text-xl mb-1">★ お気に入り</div>
+<% end %>
       <div class="text-sm text-gray-700 mb-1">
   <strong>営業時間:</strong>
   <%= onsen.open_hours.present? ? onsen.open_hours.strftime("%H:%M") : "未登録" %>

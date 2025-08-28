@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_28_032010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "onsen_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["onsen_id"], name: "index_favorites_on_onsen_id"
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
   create_table "onsens", force: :cascade do |t|
     t.string "name"
     t.decimal "geo_lat"
@@ -64,7 +73,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_23_085142) do
     t.index ["onsen_id"], name: "index_reviews_on_onsen_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "favorites", "onsens"
+  add_foreign_key "favorites", "users"
   add_foreign_key "reviews", "onsens"
 end

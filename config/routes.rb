@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :onsens, only: %i[ index show ] do
+     resource :favorite, only: %i[create destroy]
     resources :reviews, only: %i[ create new ]
   end
 
